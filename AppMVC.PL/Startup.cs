@@ -33,7 +33,7 @@ namespace AppMVC.PL
 
 			services.AddDbContext<ApplicationDbContext>(options =>
 			{
-				options.UseSqlServer("Server = .; Database = MVCApplication; Trusted_Connection = True; ");
+				options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
 			});
 
 		}
