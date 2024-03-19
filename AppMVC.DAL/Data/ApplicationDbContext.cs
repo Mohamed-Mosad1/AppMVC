@@ -9,10 +9,15 @@ using System.Threading.Tasks;
 
 namespace AppMVC.DAL.Data
 {
-	internal class ApplicationDbContext : DbContext
+	public class ApplicationDbContext : DbContext
 	{
-		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-			=> optionsBuilder.UseSqlServer("Server = .; Database = MVCApplication; Trusted_Connection = True; ");
+		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :base(options)
+		{
+
+		}
+
+		//protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		//	=> optionsBuilder.UseSqlServer("Server = .; Database = MVCApplication; Trusted_Connection = True; ");
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
