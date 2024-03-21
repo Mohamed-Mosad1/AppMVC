@@ -17,9 +17,9 @@ namespace AppMVC.PL.Controllers
         // /Department/Index
         public IActionResult Index()
 		{
-			//var department = _departmentRepo.GetAllDepartment();
+			var department = _departmentRepo.GetAllDepartment();
 
-			return View();
+			return View(department);
 		}
 	}
 }
