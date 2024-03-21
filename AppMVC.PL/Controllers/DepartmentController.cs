@@ -1,4 +1,5 @@
 ﻿using AppMVC.BLL.Interfaces;
+using AppMVC.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AppMVC.PL.Controllers
@@ -21,5 +22,26 @@ namespace AppMVC.PL.Controllers
 
 			return View(department);
 		}
-	}
+
+		
+		public IActionResult Create()
+		{
+			return View();
+		}
+
+		[HttpPost]
+        public IActionResult Create(Department department)
+        {
+            if(ModelState.IsValid) // Server Side Validation
+			{
+				var count = _departmentRepo.AddDepartment(department);
+				if(count > 0)
+				{
+					return RedirectToAction(nameof(Index));
+				}
+			}
+			return View(department);
+        }
+
+    }
 }
