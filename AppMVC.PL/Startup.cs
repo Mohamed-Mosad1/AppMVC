@@ -1,3 +1,5 @@
+using AppMVC.BLL.Interfaces;
+using AppMVC.BLL.Repositories;
 using AppMVC.DAL.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,14 +29,12 @@ namespace AppMVC.PL
 		{
 			services.AddControllersWithViews(); // Register Bult-In Services Required By MVC
 
-
-			//services.AddScoped<ApplicationDbContext>();
-			//services.AddScoped<DbContextOptions<ApplicationDbContext>>();
-
 			services.AddDbContext<ApplicationDbContext>(options =>
 			{
 				options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
 			});
+
+			services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 
 		}
 
