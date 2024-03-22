@@ -43,5 +43,20 @@ namespace AppMVC.PL.Controllers
 			return View(department);
         }
 
+		public IActionResult Details(int? id)
+		{
+            if (!id.HasValue)
+            {
+				return BadRequest(); // 400
+            }
+
+			var department = _departmentRepo.GetDepartmentById(id.Value);
+
+			if(department == null)
+			{
+				return NotFound(); // 404
+			}
+			return View(department);
+        }
     }
 }
