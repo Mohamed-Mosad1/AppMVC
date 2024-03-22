@@ -112,5 +112,37 @@ namespace AppMVC.PL.Controllers
             }
         }
 
+        public IActionResult Delete(int? id)
+        {
+            return Details(id, "Delete");
+        }
+
+        [HttpPost]
+        public IActionResult Delete(Department department)
+        {
+            try
+            {
+                _departmentRepo.DeleteDepartment(department);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                // 1. Log Exception
+                // 2. Friendly Message
+                if (_env.IsDevelopment())
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                else
+                    ModelState.AddModelError(string.Empty, "An Error Has Occurred during Updating the Department");
+
+                return View(department);
+            }
+        }
+
+
+
+
+
+
+
     }
 }
