@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace AppMVC.DAL.Data.Configurations
 {
-	internal class DepartmentConfigurations : IEntityTypeConfiguration<Employee>
+	internal class DepartmentConfigurations : IEntityTypeConfiguration<Department>
 	{
-		public void Configure(EntityTypeBuilder<Employee> builder)
+		public void Configure(EntityTypeBuilder<Department> builder)
 		{
 			// Fluent APIs for "Department" Domain
 

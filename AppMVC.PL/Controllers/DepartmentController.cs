@@ -23,7 +23,7 @@ namespace AppMVC.PL.Controllers
         // /Department/Index
         public IActionResult Index()
         {
-            var department = _departmentRepo.GetAllDepartment();
+            var department = _departmentRepo.GetAll();
 
             return View(department);
         }
@@ -35,11 +35,11 @@ namespace AppMVC.PL.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Employee department)
+        public IActionResult Create(Department department)
         {
             if (ModelState.IsValid) // Server Side Validation
             {
-                var count = _departmentRepo.AddDepartment(department);
+                var count = _departmentRepo.Add(department);
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
@@ -55,7 +55,7 @@ namespace AppMVC.PL.Controllers
                 return BadRequest(); // 400
             }
 
-            var department = _departmentRepo.GetDepartmentById(id.Value);
+            var department = _departmentRepo.GetById(id.Value);
 
             if (department == null)
             {
@@ -83,7 +83,7 @@ namespace AppMVC.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute]int id,Employee department)
+        public IActionResult Edit([FromRoute]int id,Department department)
         {
             if (id != department.Id)
             {
@@ -96,7 +96,7 @@ namespace AppMVC.PL.Controllers
 
             try
             {
-                _departmentRepo.UpdateDepartment(department);
+                _departmentRepo.Update(department);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -118,11 +118,11 @@ namespace AppMVC.PL.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(Employee department)
+        public IActionResult Delete(Department department)
         {
             try
             {
-                _departmentRepo.DeleteDepartment(department);
+                _departmentRepo.Delete(department);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
