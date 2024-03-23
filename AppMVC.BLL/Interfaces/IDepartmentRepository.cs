@@ -7,17 +7,9 @@ using System.Threading.Tasks;
 
 namespace AppMVC.BLL.Interfaces
 {
-	public interface IDepartmentRepository
+	public interface IDepartmentRepository : IGenericRepository<Department>
 	{
-		IEnumerable<Employee> GetAllDepartment();
 
-		Employee GetDepartmentById(int id);
-
-		int AddDepartment(Employee entity);
-
-		int UpdateDepartment(Employee entity);
-
-		int DeleteDepartment(Employee entity);
 
 
 

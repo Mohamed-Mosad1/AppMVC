@@ -7,16 +7,11 @@ using System.Threading.Tasks;
 
 namespace AppMVC.BLL.Interfaces
 {
-    public interface IEmployeeRepository
+    public interface IEmployeeRepository : IGenericRepository<Employee>
     {
-        IEnumerable<Employee> GetAllEmployee();
+        IQueryable<Employee> GetEmployeeByAddress(string address);
 
-        Employee GetEmployeeById(int id);
 
-        int AddEmployee(Employee entity);
 
-        int UpdateEmployee(Employee entity);
-
-        int DeleteEmployee(Employee entity);
     }
 }

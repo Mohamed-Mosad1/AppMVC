@@ -10,49 +10,15 @@ using System.Threading.Tasks;
 
 namespace AppMVC.BLL.Repositories
 {
-    public class EmployeeRepository : IEmployeeRepository
+    public class EmployeeRepository : GenericRepository<Employee>, IEmployeeRepository
     {
-        private readonly ApplicationDbContext _dbContext;
-
-        public EmployeeRepository(ApplicationDbContext dbContext) // Ask CLR for creating object from "ApplicationDbContext"
+        public EmployeeRepository(ApplicationDbContext dbContext):base(dbContext)
         {
-            _dbContext = dbContext;
+            
         }
-
-        public int AddEmployee(Employee entity)
+        public IQueryable<Employee> GetEmployeeByAddress(string address)
         {
-            _dbContext.Employees.Add(entity);
-            return _dbContext.SaveChanges();
+            return _dbContext.Employees.Where(E => E.Address.ToLower() == address.ToLower());
         }
-
-        public int DeleteEmployee(Employee entity)
-        {
-            _dbContext.Employees.Remove(entity);
-            return _dbContext.SaveChanges();
-        }
-
-        public IEnumerable<Employee> GetAllEmployee()
-        {
-            return _dbContext.Employees.AsNoTracking().ToList();
-        }
-
-        public Employee GetEmployeeById(int id)
-        {
-            ///var Employee = _dbContext.Employees.Local.Where(D => D.Id == id).FirstOrDefault();
-            ///if (Employee == null)
-            ///	Employee = _dbContext.Employees.Where(D => D.Id == id).FirstOrDefault();
-            ///return Employee;
-
-            //return _dbContext.Employees.Find(id);
-
-            return _dbContext.Find<Employee>(id); // EF core 3.1 NEW Features
-        }
-
-        public int UpdateEmployee(Employee entity)
-        {
-            _dbContext.Employees.Update(entity);
-            return _dbContext.SaveChanges();
-        }
-    
     }
 }
