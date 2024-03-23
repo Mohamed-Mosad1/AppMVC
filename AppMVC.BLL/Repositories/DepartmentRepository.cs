@@ -19,24 +19,24 @@ namespace AppMVC.BLL.Repositories
 			_dbContext = dbContext;
         }
 
-        public int AddDepartment(Department entity)
+        public int AddDepartment(Employee entity)
 		{
 			_dbContext.Departments.Add(entity);
 			return _dbContext.SaveChanges();
 		}
 
-		public int DeleteDepartment(Department entity)
+		public int DeleteDepartment(Employee entity)
 		{
 			_dbContext.Departments.Remove(entity);
 			return _dbContext.SaveChanges();
 		}
 
-		public IEnumerable<Department> GetAllDepartment()
+		public IEnumerable<Employee> GetAllDepartment()
 		{
 			return _dbContext.Departments.AsNoTracking().ToList();
 		}
 
-		public Department GetDepartmentById(int id)
+		public Employee GetDepartmentById(int id)
 		{
 			///var department = _dbContext.Departments.Local.Where(D => D.Id == id).FirstOrDefault();
 			///if (department == null)
@@ -45,10 +45,10 @@ namespace AppMVC.BLL.Repositories
 
 			//return _dbContext.Departments.Find(id);
 
-			return _dbContext.Find<Department>(id); // EF core 3.1 NEW Features
+			return _dbContext.Find<Employee>(id); // EF core 3.1 NEW Features
 		}
 
-		public int UpdateDepartment(Department entity)
+		public int UpdateDepartment(Employee entity)
 		{
 			_dbContext.Departments.Update(entity);
 			return _dbContext.SaveChanges();

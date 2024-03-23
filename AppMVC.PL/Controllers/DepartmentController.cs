@@ -35,7 +35,7 @@ namespace AppMVC.PL.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Department department)
+        public IActionResult Create(Employee department)
         {
             if (ModelState.IsValid) // Server Side Validation
             {
@@ -83,7 +83,7 @@ namespace AppMVC.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute]int id,Department department)
+        public IActionResult Edit([FromRoute]int id,Employee department)
         {
             if (id != department.Id)
             {
@@ -118,7 +118,7 @@ namespace AppMVC.PL.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(Department department)
+        public IActionResult Delete(Employee department)
         {
             try
             {

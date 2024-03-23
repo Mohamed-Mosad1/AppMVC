@@ -9,15 +9,15 @@ namespace AppMVC.BLL.Interfaces
 {
 	public interface IDepartmentRepository
 	{
-		IEnumerable<Department> GetAllDepartment();
+		IEnumerable<Employee> GetAllDepartment();
 
-		Department GetDepartmentById(int id);
+		Employee GetDepartmentById(int id);
 
-		int AddDepartment(Department entity);
+		int AddDepartment(Employee entity);
 
-		int UpdateDepartment(Department entity);
+		int UpdateDepartment(Employee entity);
 
-		int DeleteDepartment(Department entity);
+		int DeleteDepartment(Employee entity);
 
 
 

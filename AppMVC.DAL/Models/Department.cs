@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace AppMVC.DAL.Models
 {
 	// Model
-	public class Department
+	public class Employee
 	{
         public int Id { get; set; }
         
