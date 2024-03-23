@@ -35,6 +35,7 @@ namespace AppMVC.PL
 			});
 
 			services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+			services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
 		}
 

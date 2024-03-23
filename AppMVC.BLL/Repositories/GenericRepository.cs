@@ -15,7 +15,7 @@ namespace AppMVC.BLL.Repositories
     {
         private protected readonly ApplicationDbContext _dbContext;
 
-        public GenericRepository(ApplicationDbContext dbContext) // Ask CLR for creating object from "ApplicationDbContext"
+        public GenericRepository(ApplicationDbContext dbContext) 
         {
             _dbContext = dbContext;
         }
@@ -39,7 +39,7 @@ namespace AppMVC.BLL.Repositories
 
         public T GetById(int id)
         {
-            return _dbContext.Find<T>(id); // EF core 3.1 NEW Features
+            return _dbContext.Find<T>(id);
         }
 
         public int Update(T entity)

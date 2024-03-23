@@ -34,7 +34,7 @@ namespace AppMVC.PL.Controllers
         [HttpPost]
         public IActionResult Create(Employee emp)
         {
-            if (ModelState.IsValid) // Server Side Validation
+            if (ModelState.IsValid) 
             {
                 var count = _employeeRepo.Add(emp);
                 if (count > 0)

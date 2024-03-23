@@ -26,7 +26,7 @@ namespace AppMVC.DAL.Data
 
 
 
-		public DbSet<Employee> Departments { get; set; }
+		public DbSet<Department> Departments { get; set; }
 		public DbSet<Employee> Employees { get; set; }
 
 
