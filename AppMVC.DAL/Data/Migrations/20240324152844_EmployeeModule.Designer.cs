@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppMVC.DAL.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240323002006_EmployeeModule")]
+    [Migration("20240324152844_EmployeeModule")]
     partial class EmployeeModule
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -67,6 +67,9 @@ namespace AppMVC.DAL.Data.Migrations
 
                     b.Property<string>("EmailAddress")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EmpType")
+                        .HasColumnType("int");
 
                     b.Property<string>("Gender")
                         .IsRequired()

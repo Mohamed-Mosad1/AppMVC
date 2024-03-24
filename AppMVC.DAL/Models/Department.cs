@@ -10,7 +10,6 @@ namespace AppMVC.DAL.Models
 	// Model
 	public class Department : ModelBase
 	{
-        public int Id { get; set; }
         
         [Required(ErrorMessage = "Code Is Required!!")]
         public string Code { get; set; }

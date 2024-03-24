@@ -23,7 +23,6 @@ namespace AppMVC.DAL.Models
     }
     public class Employee : ModelBase
     {
-        public int Id { get; set; }
 
         [Required(ErrorMessage = "Name is Required!")]
         [MaxLength(50, ErrorMessage = "Max length of name is 50 chars")]
@@ -32,7 +31,7 @@ namespace AppMVC.DAL.Models
 
         [Range(22, 30)]
         public int Age { get; set; }
-        [RegularExpression(@"^[0-9]{1,3}-[a-zA-Z]{5-10}-[a-zA-Z]{4,10}-[a-zA-Z]{5,10}$"
+        [RegularExpression(@"^[0-9]{1,3}-[a-zA-Z]{5,10}-[a-zA-Z]{4,10}-[a-zA-Z]{5,10}$"
             , ErrorMessage = "Address must be like 123-Street-City-Country")]
         public string Address { get; set; }
 
@@ -54,6 +53,8 @@ namespace AppMVC.DAL.Models
         public DateTime HiringDate { get; set; }
 
         public Gender Gender { get; set; }
+
+        public EmpType EmpType { get; set; }
 
         public DateTime CreationDate { get; set; } = DateTime.Now;
 
