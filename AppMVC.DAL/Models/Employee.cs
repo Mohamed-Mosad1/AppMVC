@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -23,6 +24,8 @@ namespace AppMVC.DAL.Models
     }
     public class Employee : ModelBase
     {
+
+        #region Data
 
         [Required(ErrorMessage = "Name is Required!")]
         [MaxLength(50, ErrorMessage = "Max length of name is 50 chars")]
@@ -60,6 +63,12 @@ namespace AppMVC.DAL.Models
 
         public bool IsDeleted { get; set; } = false;
 
+        #endregion
+
+        public int? DepartmentId { get; set; } // FK
+
+        //[InverseProperty(nameof(Models.Department.Employees))]
+        public Department Department { get; set; }
 
     }
 }
