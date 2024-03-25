@@ -45,10 +45,16 @@ namespace AppMVC.PL.Controllers
             if (ModelState.IsValid) 
             {
                 var count = _employeeRepo.Add(emp);
+
+                // 3. TempData                
+
                 if (count > 0)
-                {
+                   TempData["Message"] = "Employee is Created Successfully";
+                
+                else
+                   TempData["Message"] = "An Error Has Occured, Employee Not Created";
+                
                     return RedirectToAction(nameof(Index));
-                }
             }
             return View(emp);
         }

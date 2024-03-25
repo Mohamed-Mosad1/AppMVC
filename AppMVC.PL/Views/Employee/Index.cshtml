@@ -12,9 +12,16 @@
     @ViewData["Message"]
 </div> *@
 
-<div class="alert alert-success">
+@* <div class="alert alert-success">
     @ViewBag.Message
-</div>
+</div> *@
+
+@if (!string.IsNullOrEmpty(TempData["Message"] as string))
+{
+    <div class="alert alert-primary">
+        @TempData["Message"]
+    </div>
+}
 
 <h1>All Employees</h1>
 <br />
@@ -57,7 +64,7 @@
                     <td>@emp.PhoneNumber</td>
                     <td>@emp.HiringDate</td>
 
-                    <partial name="_ButtonPartilal" model="@emp.Id"/>
+                    <partial name="_ButtonPartilal" model="@emp.Id" />
 
                 </tr>
             }
