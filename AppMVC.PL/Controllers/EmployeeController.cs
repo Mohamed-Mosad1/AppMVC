@@ -17,9 +17,17 @@ namespace AppMVC.PL.Controllers
             _employeeRepo = employeeRepo;
             _env = env;
         }
-
+         
         public IActionResult Index()
         {
+            // 1. ViewData
+
+            ViewData["Message"] = "Hello ViewData";
+
+            // 2. ViewBag
+
+            ViewBag.Message = "Hello ViewBag";
+
             var emp = _employeeRepo.GetAll();
 
             return View(emp);
