@@ -15,7 +15,7 @@ namespace AppMVC.BLL.Repositories
     {
         private protected readonly ApplicationDbContext _dbContext;
 
-        public GenericRepository(ApplicationDbContext dbContext) 
+        public GenericRepository(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -34,7 +34,11 @@ namespace AppMVC.BLL.Repositories
 
         public IEnumerable<T> GetAll()
         {
-            return _dbContext.Set<T>().AsNoTracking().ToList();
+            if (typeof(T) == typeof(Employee))
+               return (IEnumerable<T>) _dbContext.Employees.Include(E => E.Department).AsNoTracking().ToList();
+            
+            else
+                return _dbContext.Set<T>().AsNoTracking().ToList();
         }
 
         public T GetById(int id)

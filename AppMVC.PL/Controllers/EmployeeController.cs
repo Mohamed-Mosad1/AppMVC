@@ -9,12 +9,14 @@ namespace AppMVC.PL.Controllers
 {
     public class EmployeeController : Controller
     {
-        private readonly IEmployeeRepository _employeeRepo; 
+        private readonly IEmployeeRepository _employeeRepo;
+        //private readonly IDepartmentRepository _departmentRepository;
         private readonly IWebHostEnvironment _env;
 
-        public EmployeeController(IEmployeeRepository employeeRepo, IWebHostEnvironment env)
+        public EmployeeController(IEmployeeRepository employeeRepo /*, IDepartmentRepository departmentRepository*/, IWebHostEnvironment env)
         {
             _employeeRepo = employeeRepo;
+            //_departmentRepository = departmentRepository;
             _env = env;
         }
          
@@ -36,6 +38,10 @@ namespace AppMVC.PL.Controllers
 
         public IActionResult Create()
         {
+            //ViewData["Departments"] = _departmentRepository.GetAll();
+
+            //ViewBag.Departments = _departmentRepository.GetAll();
+
             return View();
         }
 
@@ -77,6 +83,8 @@ namespace AppMVC.PL.Controllers
 
         public IActionResult Edit(int? id)
         {
+            //ViewBag.Departments = _departmentRepository.GetAll();
+
             return Details(id, "Edit");
         }
 
