@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Linq;
 
 namespace AppMVC.PL.Controllers
 {
@@ -21,11 +22,21 @@ namespace AppMVC.PL.Controllers
         }
 
         // /Department/Index
-        public IActionResult Index()
+        public IActionResult Index(string searchInput)
         {
-            var department = _departmentRepo.GetAll();
+
+            var department = Enumerable.Empty<Department>();
+            if (string.IsNullOrEmpty(searchInput))
+            {
+                department = _departmentRepo.GetAll();
+            }
+            else
+            {
+                department = _departmentRepo.SearchEmployeeByName(searchInput.ToLower());
+            }
 
             return View(department);
+
         }
 
 

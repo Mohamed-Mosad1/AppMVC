@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Linq;
 
 namespace AppMVC.PL.Controllers
 {
@@ -19,20 +20,22 @@ namespace AppMVC.PL.Controllers
             //_departmentRepository = departmentRepository;
             _env = env;
         }
-         
-        public IActionResult Index()
+
+        public IActionResult Index(string searchInput)
         {
-            // 1. ViewData
 
-            ViewData["Message"] = "Hello ViewData";
-
-            // 2. ViewBag
-
-            ViewBag.Message = "Hello ViewBag";
-
-            var emp = _employeeRepo.GetAll();
+            var emp = Enumerable.Empty<Employee>();
+            if (string.IsNullOrEmpty(searchInput))
+            {
+                emp = _employeeRepo.GetAll();
+            }
+            else
+            {
+                emp = _employeeRepo.SearchEmployeeByName(searchInput.ToLower());
+            }
 
             return View(emp);
+
         }
 
 
@@ -48,19 +51,19 @@ namespace AppMVC.PL.Controllers
         [HttpPost]
         public IActionResult Create(Employee emp)
         {
-            if (ModelState.IsValid) 
+            if (ModelState.IsValid)
             {
                 var count = _employeeRepo.Add(emp);
 
                 // 3. TempData                
 
                 if (count > 0)
-                   TempData["Message"] = "Employee is Created Successfully";
-                
+                    TempData["Message"] = "Employee is Created Successfully";
+
                 else
-                   TempData["Message"] = "An Error Has Occured, Employee Not Created";
-                
-                    return RedirectToAction(nameof(Index));
+                    TempData["Message"] = "An Error Has Occured, Employee Not Created";
+
+                return RedirectToAction(nameof(Index));
             }
             return View(emp);
         }
@@ -93,11 +96,11 @@ namespace AppMVC.PL.Controllers
         public IActionResult Edit([FromRoute] int id, Employee emp)
         {
             if (id != emp.Id)
-               return BadRequest();
-            
+                return BadRequest();
+
             if (!ModelState.IsValid)
-               return View(emp);
-            
+                return View(emp);
+
 
             try
             {

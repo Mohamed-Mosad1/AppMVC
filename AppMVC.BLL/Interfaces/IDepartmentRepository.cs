@@ -10,9 +10,9 @@ namespace AppMVC.BLL.Interfaces
 	public interface IDepartmentRepository : IGenericRepository<Department>
 	{
 
+        IQueryable<Department> SearchEmployeeByName(string name);
 
 
 
-
-	}
+    }
 }
