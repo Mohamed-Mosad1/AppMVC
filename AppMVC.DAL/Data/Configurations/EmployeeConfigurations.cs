@@ -21,7 +21,7 @@ namespace AppMVC.DAL.Data.Configurations
                 (genderAsString) => (Gender)Enum.Parse(typeof(Gender), genderAsString, true)
                 );
 
-
+            
 
 
 

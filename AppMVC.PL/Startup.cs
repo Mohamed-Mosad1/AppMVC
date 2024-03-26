@@ -2,6 +2,7 @@ using AppMVC.BLL.Interfaces;
 using AppMVC.BLL.Repositories;
 using AppMVC.DAL.Data;
 using AppMVC.PL.Extensions;
+using AppMVC.PL.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -36,6 +37,8 @@ namespace AppMVC.PL
 			}, ServiceLifetime.Scoped);
 
 			services.AddApplicationServices(); // Extension Method
+
+			services.AddAutoMapper(M => M.AddProfile(new MappingProfiles()));
 
         }
 
