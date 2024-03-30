@@ -1,10 +1,10 @@
 ﻿@model EmployeeViewModel
 
-@inject IDepartmentRepository _departmentRepository
+@inject IUnitOfWork _IUnitOfWork
 
 
 @{
-    var department = new SelectList(_departmentRepository.GetAll(), nameof(Department.Id), nameof(Department.Name));
+    var department = new SelectList(_IUnitOfWork.DepartmentRepository.GetAll(), nameof(Department.Id), nameof(Department.Name));
 }
 
 <div class="form-group">

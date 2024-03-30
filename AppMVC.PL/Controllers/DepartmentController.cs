@@ -15,14 +15,20 @@ namespace AppMVC.PL.Controllers
     // Composition : DepartmentController has a DepartmentRepository
     public class DepartmentController : Controller
     {
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly IDepartmentRepository _departmentRepo; // NULL
         private readonly IWebHostEnvironment _env;
+        //private readonly IDepartmentRepository _departmentRepo; // NULL
 
-        public DepartmentController(IMapper mapper , IDepartmentRepository departmentRepo, IWebHostEnvironment env)
+        public DepartmentController(
+            //IDepartmentRepository departmentRepo, 
+            IUnitOfWork unitOfWork,
+            IMapper mapper, 
+            IWebHostEnvironment env)
         {
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _departmentRepo = departmentRepo;
+            //_departmentRepo = departmentRepo;
             _env = env;
         }
 
@@ -33,11 +39,11 @@ namespace AppMVC.PL.Controllers
             var department = Enumerable.Empty<Department>();
             if (string.IsNullOrEmpty(searchInput))
             {
-                department = _departmentRepo.GetAll();
+                department = _unitOfWork.DepartmentRepository.GetAll();
             }
             else
             {
-                department = _departmentRepo.SearchEmployeeByName(searchInput.ToLower());
+                department = _unitOfWork.DepartmentRepository.SearchEmployeeByName(searchInput.ToLower());
             }
 
             var mappedEmp = _mapper.Map<IEnumerable<Department>, IEnumerable<DepartmentViewModel>>(department);
@@ -60,7 +66,10 @@ namespace AppMVC.PL.Controllers
             {
                 var mappedEmp = _mapper.Map<DepartmentViewModel, Department>(departmentVM);
 
-                var count = _departmentRepo.Add(mappedEmp);
+                _unitOfWork.DepartmentRepository.Add(mappedEmp);
+
+                var count = _unitOfWork.Complete();
+
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
@@ -76,7 +85,7 @@ namespace AppMVC.PL.Controllers
                 return BadRequest(); // 400
             }
 
-            var department = _departmentRepo.GetById(id.Value);
+            var department = _unitOfWork.DepartmentRepository.GetById(id.Value);
 
             var mappedEmp = _mapper.Map<Department, DepartmentViewModel>(department);
 
@@ -121,7 +130,8 @@ namespace AppMVC.PL.Controllers
             {
                 var mappedEmp = _mapper.Map<DepartmentViewModel, Department>(departmentVM);
 
-                _departmentRepo.Update(mappedEmp);
+                _unitOfWork.DepartmentRepository.Update(mappedEmp);
+                _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -149,7 +159,8 @@ namespace AppMVC.PL.Controllers
             {
                 var mappedEmp = _mapper.Map<DepartmentViewModel, Department>(departmentVM);
 
-                _departmentRepo.Delete(mappedEmp);
+                _unitOfWork.DepartmentRepository.Delete(mappedEmp);
+                _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

@@ -1,5 +1,5 @@
-﻿using AppMVC.BLL.Interfaces;
-using AppMVC.BLL.Repositories;
+﻿using AppMVC.BLL;
+using AppMVC.BLL.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AppMVC.PL.Extensions
@@ -8,8 +8,10 @@ namespace AppMVC.PL.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            //services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            //services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
             return services;
         }

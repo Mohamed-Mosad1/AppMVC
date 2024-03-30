@@ -14,18 +14,26 @@ namespace AppMVC.PL.Controllers
 {
     public class EmployeeController : Controller
     {
-        private readonly IEmployeeRepository _employeeRepo;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-
-        //private readonly IDepartmentRepository _departmentRepository;
         private readonly IWebHostEnvironment _env;
 
-        public EmployeeController(IEmployeeRepository employeeRepo, IMapper mapper /*, IDepartmentRepository departmentRepository*/, IWebHostEnvironment env)
+        //private readonly IEmployeeRepository _employeeRepo;
+        //private readonly IDepartmentRepository _departmentRepository;
+
+        public EmployeeController(
+            IUnitOfWork unitOfWork,
+            //IEmployeeRepository employeeRepo, 
+            //IDepartmentRepository departmentRepository, 
+            IMapper mapper, 
+            IWebHostEnvironment env)
         {
-            _employeeRepo = employeeRepo;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
-            //_departmentRepository = departmentRepository;
             _env = env;
+
+            //_employeeRepo = employeeRepo;
+            //_departmentRepository = departmentRepository;
         }
 
         public IActionResult Index(string searchInput)
@@ -34,11 +42,11 @@ namespace AppMVC.PL.Controllers
             var emp = Enumerable.Empty<Employee>();
             if (string.IsNullOrEmpty(searchInput))
             {
-                emp = _employeeRepo.GetAll();
+                emp = _unitOfWork.EmployeeRepository.GetAll();
             }
             else
             {
-                emp = _employeeRepo.SearchEmployeeByName(searchInput.ToLower());
+                emp = _unitOfWork.EmployeeRepository.SearchEmployeeByName(searchInput.ToLower());
             }
 
             var mappedEmp = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(emp);
@@ -79,9 +87,9 @@ namespace AppMVC.PL.Controllers
 
                 var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(empVM);
 
-                var count = _employeeRepo.Add(mappedEmp);
+                _unitOfWork.EmployeeRepository.Add(mappedEmp);
 
-                // 3. TempData                
+                var count = _unitOfWork.Complete();
 
                 if (count > 0)
                     TempData["Message"] = "Employee is Created Successfully";
@@ -101,7 +109,7 @@ namespace AppMVC.PL.Controllers
                 return BadRequest(); // 400
             }
 
-            var emp = _employeeRepo.GetById(id.Value);
+            var emp = _unitOfWork.EmployeeRepository.GetById(id.Value);
 
             var mappedEmp = _mapper.Map<Employee, EmployeeViewModel>(emp);
 
@@ -134,7 +142,8 @@ namespace AppMVC.PL.Controllers
             {
                 var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(empVM);
 
-                _employeeRepo.Update(mappedEmp);
+                _unitOfWork.EmployeeRepository.Update(mappedEmp);
+                _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -160,7 +169,8 @@ namespace AppMVC.PL.Controllers
             {
                 var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(empVM);
 
-                _employeeRepo.Delete(mappedEmp);
+                _unitOfWork.EmployeeRepository.Delete(mappedEmp);
+                _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
