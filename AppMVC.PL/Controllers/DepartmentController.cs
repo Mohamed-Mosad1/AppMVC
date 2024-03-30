@@ -1,4 +1,5 @@
 ﻿using AppMVC.BLL.Interfaces;
+using AppMVC.BLL.Repositories;
 using AppMVC.DAL.Models;
 using AppMVC.PL.ViewModels;
 using AutoMapper;
@@ -37,13 +38,15 @@ namespace AppMVC.PL.Controllers
         {
 
             var department = Enumerable.Empty<Department>();
+            var departmentRepo = _unitOfWork.Repository<Department>() as DepartmentRepository;
+
             if (string.IsNullOrEmpty(searchInput))
             {
-                department = _unitOfWork.DepartmentRepository.GetAll();
+                department = departmentRepo.GetAll();
             }
             else
             {
-                department = _unitOfWork.DepartmentRepository.SearchEmployeeByName(searchInput.ToLower());
+                department = departmentRepo.SearchEmployeeByName(searchInput.ToLower());
             }
 
             var mappedEmp = _mapper.Map<IEnumerable<Department>, IEnumerable<DepartmentViewModel>>(department);
@@ -66,7 +69,7 @@ namespace AppMVC.PL.Controllers
             {
                 var mappedEmp = _mapper.Map<DepartmentViewModel, Department>(departmentVM);
 
-                _unitOfWork.DepartmentRepository.Add(mappedEmp);
+                _unitOfWork.Repository<Department>().Add(mappedEmp);
 
                 var count = _unitOfWork.Complete();
 
@@ -85,7 +88,7 @@ namespace AppMVC.PL.Controllers
                 return BadRequest(); // 400
             }
 
-            var department = _unitOfWork.DepartmentRepository.GetById(id.Value);
+            var department = _unitOfWork.Repository<Department>().GetById(id.Value);
 
             var mappedEmp = _mapper.Map<Department, DepartmentViewModel>(department);
 
@@ -130,7 +133,7 @@ namespace AppMVC.PL.Controllers
             {
                 var mappedEmp = _mapper.Map<DepartmentViewModel, Department>(departmentVM);
 
-                _unitOfWork.DepartmentRepository.Update(mappedEmp);
+                _unitOfWork.Repository<Department>().Update(mappedEmp);
                 _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
@@ -159,7 +162,7 @@ namespace AppMVC.PL.Controllers
             {
                 var mappedEmp = _mapper.Map<DepartmentViewModel, Department>(departmentVM);
 
-                _unitOfWork.DepartmentRepository.Delete(mappedEmp);
+                _unitOfWork.Repository<Department>().Delete(mappedEmp);
                 _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }

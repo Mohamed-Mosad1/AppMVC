@@ -1,4 +1,5 @@
 ﻿using AppMVC.BLL.Interfaces;
+using AppMVC.BLL.Repositories;
 using AppMVC.DAL.Models;
 using AppMVC.PL.ViewModels;
 using AutoMapper;
@@ -40,13 +41,14 @@ namespace AppMVC.PL.Controllers
         {
 
             var emp = Enumerable.Empty<Employee>();
+            var empRepo = _unitOfWork.Repository<Employee>() as EmployeeRepository;
             if (string.IsNullOrEmpty(searchInput))
             {
-                emp = _unitOfWork.EmployeeRepository.GetAll();
+                emp = empRepo.GetAll();
             }
             else
             {
-                emp = _unitOfWork.EmployeeRepository.SearchEmployeeByName(searchInput.ToLower());
+                emp = empRepo.SearchEmployeeByName(searchInput.ToLower());
             }
 
             var mappedEmp = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(emp);
@@ -87,7 +89,7 @@ namespace AppMVC.PL.Controllers
 
                 var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(empVM);
 
-                _unitOfWork.EmployeeRepository.Add(mappedEmp);
+                _unitOfWork.Repository<Employee>().Add(mappedEmp);
 
                 var count = _unitOfWork.Complete();
 
@@ -109,7 +111,7 @@ namespace AppMVC.PL.Controllers
                 return BadRequest(); // 400
             }
 
-            var emp = _unitOfWork.EmployeeRepository.GetById(id.Value);
+            var emp = _unitOfWork.Repository<Employee>().GetById(id.Value);
 
             var mappedEmp = _mapper.Map<Employee, EmployeeViewModel>(emp);
 
@@ -142,7 +144,7 @@ namespace AppMVC.PL.Controllers
             {
                 var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(empVM);
 
-                _unitOfWork.EmployeeRepository.Update(mappedEmp);
+                _unitOfWork.Repository<Employee>().Update(mappedEmp);
                 _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
@@ -169,7 +171,7 @@ namespace AppMVC.PL.Controllers
             {
                 var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(empVM);
 
-                _unitOfWork.EmployeeRepository.Delete(mappedEmp);
+                _unitOfWork.Repository<Employee>().Delete(mappedEmp);
                 _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
