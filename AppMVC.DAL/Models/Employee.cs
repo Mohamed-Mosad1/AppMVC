@@ -54,6 +54,8 @@ namespace AppMVC.DAL.Models
 
         #endregion
 
+        public string ImageName { get; set; }
+
         public int? DepartmentId { get; set; } // FK
 
         public Department Department { get; set; }

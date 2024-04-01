@@ -11,7 +11,7 @@ namespace AppMVC.PL.Helpers
             // 1. Get Located Folder Path
             //string folderPath = $"C:\\Users\\moham\\source\\repos\\AppMVC\\AppMVC.PL\\wwwroot\\files\\{folderName}";
             //string folderPath = $"{Directory.GetCurrentDirectory()}\\wwwroot\\files\\{folderName}";
-            string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "\\wwwroot\\files", folderName);
+            string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\files", folderName);
 
             if (!Directory.Exists(folderPath))
             {

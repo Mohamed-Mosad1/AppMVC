@@ -1,6 +1,7 @@
 ﻿using AppMVC.DAL.Models;
 using System.ComponentModel.DataAnnotations;
 using System;
+using Microsoft.AspNetCore.Http;
 
 namespace AppMVC.PL.ViewModels
 {
@@ -49,8 +50,9 @@ namespace AppMVC.PL.ViewModels
         #endregion
 
         public int? DepartmentId { get; set; } // FK
-
-        //[InverseProperty(nameof(Models.Department.Employees))]
         public Department Department { get; set; }
+        public IFormFile Image { get; set; }
+        public string ImageName { get; set; }
+
     }
 }
