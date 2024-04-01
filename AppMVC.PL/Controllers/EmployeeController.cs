@@ -1,6 +1,7 @@
 ﻿using AppMVC.BLL.Interfaces;
 using AppMVC.BLL.Repositories;
 using AppMVC.DAL.Models;
+using AppMVC.PL.Helpers;
 using AppMVC.PL.ViewModels;
 using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +11,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 
 namespace AppMVC.PL.Controllers
 {
@@ -26,7 +28,7 @@ namespace AppMVC.PL.Controllers
             IUnitOfWork unitOfWork,
             //IEmployeeRepository employeeRepo, 
             //IDepartmentRepository departmentRepository, 
-            IMapper mapper, 
+            IMapper mapper,
             IWebHostEnvironment env)
         {
             _unitOfWork = unitOfWork;
@@ -61,8 +63,6 @@ namespace AppMVC.PL.Controllers
 
         public IActionResult Create()
         {
-
-
             return View();
         }
 
@@ -71,19 +71,7 @@ namespace AppMVC.PL.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Manual Mapping
-
-                ///var mappedEmp = new Employee()
-                ///{
-                ///    Name = emp.Name,
-                ///    Age = emp.Age,
-                ///    Address = emp.Address,
-                ///    Salary  = emp.Salary,
-                ///    EmailAddress = emp.EmailAddress,
-                ///    PhoneNumber = emp.PhoneNumber,
-                ///    IsActive = emp.IsActive,
-                ///    HiringDate = emp.HiringDate,
-                ///};
+                empVM.ImageName = DocumentSettings.UploadFile(empVM.Image, "images");
 
                 //Employee mappedEmp = (Employee) empVM;
 
@@ -94,10 +82,14 @@ namespace AppMVC.PL.Controllers
                 var count = _unitOfWork.Complete();
 
                 if (count > 0)
+                {
                     TempData["Message"] = "Employee is Created Successfully";
-
+                }
                 else
+                {
                     TempData["Message"] = "An Error Has Occured, Employee Not Created";
+
+                }
 
                 return RedirectToAction(nameof(Index));
             }
