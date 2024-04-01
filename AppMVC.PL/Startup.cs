@@ -1,6 +1,8 @@
 using AppMVC.BLL.Interfaces;
 using AppMVC.BLL.Repositories;
 using AppMVC.DAL.Data;
+using AppMVC.PL.Extensions;
+using AppMVC.PL.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,12 +34,13 @@ namespace AppMVC.PL
 			services.AddDbContext<ApplicationDbContext>(options =>
 			{
 				options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-			});
+			}, ServiceLifetime.Scoped);
 
-			services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-			services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+			services.AddApplicationServices(); // Extension Method
 
-		}
+			services.AddAutoMapper(M => M.AddProfile(new MappingProfiles()));
+
+        }
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

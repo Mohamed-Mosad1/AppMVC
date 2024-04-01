@@ -11,7 +11,7 @@ namespace AppMVC.BLL.Interfaces
     {
         IQueryable<Employee> GetEmployeeByAddress(string address);
 
-
+        IQueryable<Employee> SearchEmployeeByName(string name);
 
     }
 }

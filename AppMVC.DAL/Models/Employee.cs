@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -24,31 +25,21 @@ namespace AppMVC.DAL.Models
     public class Employee : ModelBase
     {
 
-        [Required(ErrorMessage = "Name is Required!")]
-        [MaxLength(50, ErrorMessage = "Max length of name is 50 chars")]
-        [MinLength(5, ErrorMessage = "Min length of name is 5 chars")]
+        #region Data
+
         public string Name { get; set; }
 
-        [Range(22, 30)]
         public int Age { get; set; }
-        [RegularExpression(@"^[0-9]{1,3}-[a-zA-Z]{5,10}-[a-zA-Z]{4,10}-[a-zA-Z]{5,10}$"
-            , ErrorMessage = "Address must be like 123-Street-City-Country")]
+
         public string Address { get; set; }
 
-        [DataType(DataType.Currency)]
         public decimal Salary { get; set; }
 
-        [Display(Name = "Is Active")]
         public bool IsActive { get; set; }
 
-        [EmailAddress]
         public string EmailAddress { get; set; }
 
-        [Display(Name = "Phone Number")]
-        [Phone]
         public string PhoneNumber { get; set; }
-
-        [Display(Name = "Hiring Date")]
 
         public DateTime HiringDate { get; set; }
 
@@ -56,10 +47,16 @@ namespace AppMVC.DAL.Models
 
         public EmpType EmpType { get; set; }
 
-        public DateTime CreationDate { get; set; } = DateTime.Now;
-
         public bool IsDeleted { get; set; } = false;
 
+        public DateTime CreationDate { get; set; } = DateTime.Now;
+
+
+        #endregion
+
+        public int? DepartmentId { get; set; } // FK
+
+        public Department Department { get; set; }
 
     }
 }

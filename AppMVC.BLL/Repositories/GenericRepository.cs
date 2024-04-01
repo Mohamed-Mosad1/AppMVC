@@ -15,26 +15,35 @@ namespace AppMVC.BLL.Repositories
     {
         private protected readonly ApplicationDbContext _dbContext;
 
-        public GenericRepository(ApplicationDbContext dbContext) 
+        public GenericRepository(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public int Add(T entity)
+        public void Add(T entity)
         {
             _dbContext.Set<T>().Add(entity);
-            return _dbContext.SaveChanges();
+            //return _dbContext.SaveChanges();
+        }
+        public void Update(T entity)
+        {
+            _dbContext.Set<T>().Update(entity);
+            //return _dbContext.SaveChanges();
         }
 
-        public int Delete(T entity)
+        public void Delete(T entity)
         {
             _dbContext.Set<T>().Remove(entity);
-            return _dbContext.SaveChanges();
+            //return _dbContext.SaveChanges();
         }
 
         public IEnumerable<T> GetAll()
         {
-            return _dbContext.Set<T>().AsNoTracking().ToList();
+            if (typeof(T) == typeof(Employee))
+               return (IEnumerable<T>) _dbContext.Employees.Include(E => E.Department).AsNoTracking().ToList();
+            
+            else
+                return _dbContext.Set<T>().AsNoTracking().ToList();
         }
 
         public T GetById(int id)
@@ -42,10 +51,5 @@ namespace AppMVC.BLL.Repositories
             return _dbContext.Find<T>(id);
         }
 
-        public int Update(T entity)
-        {
-            _dbContext.Set<T>().Update(entity);
-            return _dbContext.SaveChanges();
-        }
     }
 }

@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 
 namespace AppMVC.BLL.Interfaces
 {
-	public interface IDepartmentRepository : IGenericRepository<Department>
-	{
+    public interface IUnitOfWork : IDisposable
+    {
+        IGenericRepository<T> Repository<T>() where T : ModelBase; 
 
-        IQueryable<Department> SearchEmployeeByName(string name);
-
-
+        int Complete();
 
     }
 }
