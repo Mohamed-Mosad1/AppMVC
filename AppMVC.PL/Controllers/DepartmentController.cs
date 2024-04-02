@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AppMVC.PL.Controllers
 {
@@ -34,7 +35,7 @@ namespace AppMVC.PL.Controllers
         }
 
         // /Department/Index
-        public IActionResult Index(string searchInput)
+        public async Task<IActionResult> Index(string searchInput)
         {
 
             var department = Enumerable.Empty<Department>();
@@ -42,7 +43,7 @@ namespace AppMVC.PL.Controllers
 
             if (string.IsNullOrEmpty(searchInput))
             {
-                department = departmentRepo.GetAll();
+                department = await departmentRepo.GetAllAsync();
             }
             else
             {
@@ -63,7 +64,7 @@ namespace AppMVC.PL.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(DepartmentViewModel departmentVM)
+        public async Task<IActionResult> Create(DepartmentViewModel departmentVM)
         {
             if (ModelState.IsValid) // Server Side Validation
             {
@@ -71,7 +72,7 @@ namespace AppMVC.PL.Controllers
 
                 _unitOfWork.Repository<Department>().Add(mappedEmp);
 
-                var count = _unitOfWork.Complete();
+                var count = await _unitOfWork.Complete();
 
                 if (count > 0)
                 {
@@ -81,14 +82,14 @@ namespace AppMVC.PL.Controllers
             return View(departmentVM);
         }
 
-        public IActionResult Details(int? id, string viewName = "Details")
+        public async Task<IActionResult> Details(int? id, string viewName = "Details")
         {
             if (!id.HasValue)
             {
                 return BadRequest(); // 400
             }
 
-            var department = _unitOfWork.Repository<Department>().GetById(id.Value);
+            var department = await _unitOfWork.Repository<Department>().GetByIdAsync(id.Value);
 
             var mappedEmp = _mapper.Map<Department, DepartmentViewModel>(department);
 
@@ -99,7 +100,7 @@ namespace AppMVC.PL.Controllers
             return View(viewName, mappedEmp);
         }
 
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             ///if (!id.HasValue)
             ///{
@@ -112,13 +113,13 @@ namespace AppMVC.PL.Controllers
             ///}
             ///return View(department);
 
-            return Details(id, "Edit");
+            return await Details(id, "Edit");
 
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute]int id,DepartmentViewModel departmentVM)
+        public async Task<IActionResult> Edit([FromRoute]int id,DepartmentViewModel departmentVM)
         {
             if (id != departmentVM.Id)
             {
@@ -134,7 +135,7 @@ namespace AppMVC.PL.Controllers
                 var mappedEmp = _mapper.Map<DepartmentViewModel, Department>(departmentVM);
 
                 _unitOfWork.Repository<Department>().Update(mappedEmp);
-                _unitOfWork.Complete();
+                await _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -150,20 +151,20 @@ namespace AppMVC.PL.Controllers
             }
         }
 
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            return Details(id, "Delete");
+            return await Details(id, "Delete");
         }
 
         [HttpPost]
-        public IActionResult Delete(DepartmentViewModel departmentVM)
+        public async Task<IActionResult> Delete(DepartmentViewModel departmentVM)
         {
             try
             {
                 var mappedEmp = _mapper.Map<DepartmentViewModel, Department>(departmentVM);
 
                 _unitOfWork.Repository<Department>().Delete(mappedEmp);
-                _unitOfWork.Complete();
+                await _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

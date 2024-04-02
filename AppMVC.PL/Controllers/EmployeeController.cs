@@ -7,11 +7,10 @@ using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata;
+using System.Threading.Tasks;
 
 namespace AppMVC.PL.Controllers
 {
@@ -39,14 +38,14 @@ namespace AppMVC.PL.Controllers
             //_departmentRepository = departmentRepository;
         }
 
-        public IActionResult Index(string searchInput)
+        public async Task<IActionResult> Index(string searchInput)
         {
 
             var emp = Enumerable.Empty<Employee>();
             var empRepo = _unitOfWork.Repository<Employee>() as EmployeeRepository;
             if (string.IsNullOrEmpty(searchInput))
             {
-                emp = empRepo.GetAll();
+                emp = await empRepo.GetAllAsync();
             }
             else
             {
@@ -67,11 +66,11 @@ namespace AppMVC.PL.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(EmployeeViewModel empVM)
+        public async Task<IActionResult> Create(EmployeeViewModel empVM)
         {
             if (ModelState.IsValid)
             {
-                empVM.ImageName = DocumentSettings.UploadFile(empVM.Image, "images");
+                empVM.ImageName =await DocumentSettings.UploadFile(empVM.Image, "images");
 
                 //Employee mappedEmp = (Employee) empVM;
 
@@ -79,7 +78,7 @@ namespace AppMVC.PL.Controllers
 
                 _unitOfWork.Repository<Employee>().Add(mappedEmp);
 
-                var count = _unitOfWork.Complete();
+                var count =await _unitOfWork.Complete();
 
                 if (count > 0)
                 {
@@ -96,14 +95,14 @@ namespace AppMVC.PL.Controllers
             return View(empVM);
         }
 
-        public IActionResult Details(int? id, string viewName = "Details")
+        public async Task<IActionResult> Details(int? id, string viewName = "Details")
         {
             if (!id.HasValue)
             {
                 return BadRequest(); // 400
             }
 
-            var emp = _unitOfWork.Repository<Employee>().GetById(id.Value);
+            var emp = await _unitOfWork.Repository<Employee>().GetByIdAsync(id.Value);
 
             var mappedEmp = _mapper.Map<Employee, EmployeeViewModel>(emp);
 
@@ -118,16 +117,14 @@ namespace AppMVC.PL.Controllers
             return View(viewName, mappedEmp);
         }
 
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
-            //ViewBag.Departments = _departmentRepository.GetAll();
-
-            return Details(id, "Edit");
+            return await Details(id, "Edit");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, EmployeeViewModel empVM)
+        public async Task<IActionResult> Edit([FromRoute] int id, EmployeeViewModel empVM)
         {
             if (id != empVM.Id)
                 return BadRequest();
@@ -141,7 +138,7 @@ namespace AppMVC.PL.Controllers
                 var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(empVM);
 
                 _unitOfWork.Repository<Employee>().Update(mappedEmp);
-                _unitOfWork.Complete();
+                await _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -155,13 +152,13 @@ namespace AppMVC.PL.Controllers
             }
         }
 
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            return Details(id, "Delete");
+            return await Details(id, "Delete");
         }
 
         [HttpPost]
-        public IActionResult Delete(EmployeeViewModel empVM)
+        public async Task<IActionResult> Delete(EmployeeViewModel empVM)
         {
             try
             {
@@ -170,7 +167,7 @@ namespace AppMVC.PL.Controllers
                 var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(empVM);
 
                 _unitOfWork.Repository<Employee>().Delete(mappedEmp);
-                var count = _unitOfWork.Complete();
+                var count = await _unitOfWork.Complete();
                 if (count > 0)
                 {
                     DocumentSettings.DeleteFile(empVM.ImageName, "images");
