@@ -21,35 +21,28 @@ namespace AppMVC.BLL.Repositories
         }
 
         public void Add(T entity)
-        {
-            _dbContext.Set<T>().Add(entity);
-            //return _dbContext.SaveChanges();
-        }
+            => _dbContext.Set<T>().Add(entity);
+
         public void Update(T entity)
-        {
-            _dbContext.Set<T>().Update(entity);
-            //return _dbContext.SaveChanges();
-        }
+            => _dbContext.Set<T>().Update(entity);
 
         public void Delete(T entity)
+            => _dbContext.Set<T>().Remove(entity);
+
+        public async Task<T> GetByIdAsync(int id)
         {
-            _dbContext.Set<T>().Remove(entity);
-            //return _dbContext.SaveChanges();
+            return await _dbContext.FindAsync<T>(id);
         }
 
-        public IEnumerable<T> GetAll()
+        public virtual async Task<IEnumerable<T>> GetAllAsync()
         {
             if (typeof(T) == typeof(Employee))
-               return (IEnumerable<T>) _dbContext.Employees.Include(E => E.Department).AsNoTracking().ToList();
-            
-            else
-                return _dbContext.Set<T>().AsNoTracking().ToList();
+                return (IEnumerable<T>) await _dbContext.Employees.Include(E => E.Department).AsNoTracking().ToListAsync();
+
+
+            return await _dbContext.Set<T>().AsNoTracking().ToListAsync();
         }
 
-        public T GetById(int id)
-        {
-            return _dbContext.Find<T>(id);
-        }
 
     }
 }
