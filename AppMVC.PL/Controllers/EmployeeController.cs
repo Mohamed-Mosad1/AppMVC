@@ -111,6 +111,10 @@ namespace AppMVC.PL.Controllers
             {
                 return NotFound(); // 404
             }
+
+            if (viewName.Equals("Delete", StringComparison.OrdinalIgnoreCase))
+                TempData["ImageName"] = emp.ImageName;
+
             return View(viewName, mappedEmp);
         }
 
@@ -161,11 +165,18 @@ namespace AppMVC.PL.Controllers
         {
             try
             {
+                empVM.ImageName = TempData["ImageName"] as string;
+
                 var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(empVM);
 
                 _unitOfWork.Repository<Employee>().Delete(mappedEmp);
-                _unitOfWork.Complete();
-                return RedirectToAction(nameof(Index));
+                var count = _unitOfWork.Complete();
+                if (count > 0)
+                {
+                    DocumentSettings.DeleteFile(empVM.ImageName, "images");
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(empVM);
             }
             catch (Exception ex)
             {
