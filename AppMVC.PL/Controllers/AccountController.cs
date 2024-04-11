@@ -1,4 +1,5 @@
 ﻿using AppMVC.DAL.Models;
+using AppMVC.PL.Helpers;
 using AppMVC.PL.ViewModels.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -104,6 +105,55 @@ namespace AppMVC.PL.Controllers
             await _signInManager.SignOutAsync();
 
             return RedirectToAction(nameof(SignIn));
+        }
+
+        #endregion
+
+        #region Forget Password
+
+        public IActionResult ForgetPassword()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> SendResetPasswordUrl(ForgetPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+
+                if (user is not null)
+                {
+                    // Generate Token
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                   
+                    // Create URL Which Send in Body of the Email
+                    var url = Url.Action("ResetPassword", "Account", new { Email = model.Email, Token = token }, Request.Scheme);
+
+                    // Create Email
+                    var email = new Email()
+                    {
+                        Subject = "Reset Your Password",
+                        Recipients = model.Email,
+                        Body = url
+                    };
+
+                    // Send Email
+                    EmailSettings.SendEmail(email);
+
+                    // Redirect To Action
+                    return RedirectToAction(nameof(CheckYourInput));
+                }
+
+                ModelState.AddModelError(string.Empty, "Invalid Email");
+            }
+
+            return View(nameof(ForgetPassword), model);
+        }
+
+        public IActionResult CheckYourInput()
+        {
+            return View();
         }
 
         #endregion
