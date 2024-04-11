@@ -62,6 +62,7 @@ namespace AppMVC.PL.Controllers
         #endregion
 
         #region Sign In
+
         [HttpGet]
         public IActionResult SignIn()
         {
@@ -92,6 +93,17 @@ namespace AppMVC.PL.Controllers
             }
 
             return View(model);
+        }
+
+        #endregion
+
+        #region Sign Out
+
+        public new async Task<IActionResult> SignOut()
+        {
+            await _signInManager.SignOutAsync();
+
+            return RedirectToAction(nameof(SignIn));
         }
 
         #endregion
