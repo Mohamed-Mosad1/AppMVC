@@ -36,8 +36,8 @@ namespace AppMVC.PL.Controllers
                 {
                     user = new ApplicationUser()
                     {
-                        Fname = model.FirstName,
-                        Lname = model.LastName,
+                        FName = model.FirstName,
+                        LName = model.LastName,
                         UserName = model.UserName,
                         Email = model.Email,
                         IsAgree = model.IsAgree

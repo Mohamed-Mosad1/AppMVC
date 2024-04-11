@@ -9,8 +9,8 @@ namespace AppMVC.DAL.Models
 {
 	public class ApplicationUser : IdentityUser
 	{
-        public string Fname { get; set; }
-        public string Lname { get; set; }
+        public string FName { get; set; }
+        public string LName { get; set; }
         public bool IsAgree { get; set; }
     }
 }
