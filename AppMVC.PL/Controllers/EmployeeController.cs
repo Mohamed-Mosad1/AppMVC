@@ -4,6 +4,7 @@ using AppMVC.DAL.Models;
 using AppMVC.PL.Helpers;
 using AppMVC.PL.ViewModels;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
@@ -14,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace AppMVC.PL.Controllers
 {
+    [Authorize]
     public class EmployeeController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
