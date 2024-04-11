@@ -126,7 +126,7 @@ namespace AppMVC.PL.Controllers
                 {
                     // Generate Token
                     var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                   
+
                     // Create URL Which Send in Body of the Email
                     var url = Url.Action("ResetPassword", "Account", new { Email = model.Email, Token = token }, Request.Scheme);
 
@@ -154,6 +154,51 @@ namespace AppMVC.PL.Controllers
         public IActionResult CheckYourInput()
         {
             return View();
+        }
+
+        #endregion
+
+        #region Reset Password
+
+        [HttpGet]
+        public IActionResult ResetPassword(string email, string token)
+        {
+            TempData["email"] = email;
+            TempData["token"] = token;
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var email = TempData["email"] as string;
+                var token = TempData["token"] as string;
+
+                if (email != null && token != null)
+                {
+                    var user = await _userManager.FindByEmailAsync(email);
+                    if (user is not null)
+                    {
+                       var result = await _userManager.ResetPasswordAsync(user, token, model.NewPassword);
+                        if(result.Succeeded)
+                           return RedirectToAction(nameof(SignIn));
+
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                    }
+
+                    ModelState.AddModelError(string.Empty, "Invalid Reset Password");
+                }
+
+
+            }
+
+            return View(model);
         }
 
         #endregion
