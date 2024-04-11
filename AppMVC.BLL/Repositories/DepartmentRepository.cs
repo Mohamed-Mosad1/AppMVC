@@ -16,5 +16,10 @@ namespace AppMVC.BLL.Repositories
         {
             
         }
+
+        public IQueryable<Department> SearchEmployeeByName(string name)
+        {
+            return _dbContext.Departments.Where(E => E.Name.ToLower().Contains(name));
+        }
     }
 }

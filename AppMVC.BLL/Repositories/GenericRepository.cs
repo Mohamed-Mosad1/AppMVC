@@ -15,37 +15,34 @@ namespace AppMVC.BLL.Repositories
     {
         private protected readonly ApplicationDbContext _dbContext;
 
-        public GenericRepository(ApplicationDbContext dbContext) 
+        public GenericRepository(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public int Add(T entity)
+        public void Add(T entity)
+            => _dbContext.Set<T>().Add(entity);
+
+        public void Update(T entity)
+            => _dbContext.Set<T>().Update(entity);
+
+        public void Delete(T entity)
+            => _dbContext.Set<T>().Remove(entity);
+
+        public async Task<T> GetByIdAsync(int id)
         {
-            _dbContext.Set<T>().Add(entity);
-            return _dbContext.SaveChanges();
+            return await _dbContext.FindAsync<T>(id);
         }
 
-        public int Delete(T entity)
+        public virtual async Task<IEnumerable<T>> GetAllAsync()
         {
-            _dbContext.Set<T>().Remove(entity);
-            return _dbContext.SaveChanges();
+            if (typeof(T) == typeof(Employee))
+                return (IEnumerable<T>) await _dbContext.Employees.Include(E => E.Department).AsNoTracking().ToListAsync();
+
+
+            return await _dbContext.Set<T>().AsNoTracking().ToListAsync();
         }
 
-        public IEnumerable<T> GetAll()
-        {
-            return _dbContext.Set<T>().AsNoTracking().ToList();
-        }
 
-        public T GetById(int id)
-        {
-            return _dbContext.Find<T>(id);
-        }
-
-        public int Update(T entity)
-        {
-            _dbContext.Set<T>().Update(entity);
-            return _dbContext.SaveChanges();
-        }
     }
 }

@@ -1,9 +1,15 @@
 ﻿using AppMVC.BLL.Interfaces;
+using AppMVC.BLL.Repositories;
 using AppMVC.DAL.Models;
+using AppMVC.PL.ViewModels;
+using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace AppMVC.PL.Controllers
 {
@@ -11,21 +17,44 @@ namespace AppMVC.PL.Controllers
     // Composition : DepartmentController has a DepartmentRepository
     public class DepartmentController : Controller
     {
-        private readonly IDepartmentRepository _departmentRepo; // NULL
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _env;
+        //private readonly IDepartmentRepository _departmentRepo; // NULL
 
-        public DepartmentController(IDepartmentRepository departmentRepo, IWebHostEnvironment env)
+        public DepartmentController(
+            //IDepartmentRepository departmentRepo, 
+            IUnitOfWork unitOfWork,
+            IMapper mapper, 
+            IWebHostEnvironment env)
         {
-            _departmentRepo = departmentRepo;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+            //_departmentRepo = departmentRepo;
             _env = env;
         }
 
         // /Department/Index
-        public IActionResult Index()
+        public async Task<IActionResult> Index(string searchInput)
         {
-            var department = _departmentRepo.GetAll();
 
-            return View(department);
+            var department = Enumerable.Empty<Department>();
+            var departmentRepo = _unitOfWork.Repository<Department>() as DepartmentRepository;
+
+            if (string.IsNullOrEmpty(searchInput))
+            {
+                department = await departmentRepo.GetAllAsync();
+            }
+            else
+            {
+                department = departmentRepo.SearchEmployeeByName(searchInput.ToLower());
+            }
+
+            var mappedEmp = _mapper.Map<IEnumerable<Department>, IEnumerable<DepartmentViewModel>>(department);
+
+
+            return View(mappedEmp);
+
         }
 
 
@@ -35,36 +64,43 @@ namespace AppMVC.PL.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Department department)
+        public async Task<IActionResult> Create(DepartmentViewModel departmentVM)
         {
             if (ModelState.IsValid) // Server Side Validation
             {
-                var count = _departmentRepo.Add(department);
+                var mappedEmp = _mapper.Map<DepartmentViewModel, Department>(departmentVM);
+
+                _unitOfWork.Repository<Department>().Add(mappedEmp);
+
+                var count = await _unitOfWork.Complete();
+
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
                 }
             }
-            return View(department);
+            return View(departmentVM);
         }
 
-        public IActionResult Details(int? id, string viewName = "Details")
+        public async Task<IActionResult> Details(int? id, string viewName = "Details")
         {
             if (!id.HasValue)
             {
                 return BadRequest(); // 400
             }
 
-            var department = _departmentRepo.GetById(id.Value);
+            var department = await _unitOfWork.Repository<Department>().GetByIdAsync(id.Value);
+
+            var mappedEmp = _mapper.Map<Department, DepartmentViewModel>(department);
 
             if (department == null)
             {
                 return NotFound(); // 404
             }
-            return View(viewName, department);
+            return View(viewName, mappedEmp);
         }
 
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             ///if (!id.HasValue)
             ///{
@@ -77,26 +113,29 @@ namespace AppMVC.PL.Controllers
             ///}
             ///return View(department);
 
-            return Details(id, "Edit");
+            return await Details(id, "Edit");
 
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute]int id,Department department)
+        public async Task<IActionResult> Edit([FromRoute]int id,DepartmentViewModel departmentVM)
         {
-            if (id != department.Id)
+            if (id != departmentVM.Id)
             {
                 return BadRequest();
             }
             if (!ModelState.IsValid)
             {
-                return View(department);
+                return View(departmentVM);
             }
 
             try
             {
-                _departmentRepo.Update(department);
+                var mappedEmp = _mapper.Map<DepartmentViewModel, Department>(departmentVM);
+
+                _unitOfWork.Repository<Department>().Update(mappedEmp);
+                await _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -108,21 +147,24 @@ namespace AppMVC.PL.Controllers
                 else
                     ModelState.AddModelError(string.Empty, "An Error Has Occurred during Updating the Department");
 
-                return View(department);
+                return View(departmentVM);
             }
         }
 
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            return Details(id, "Delete");
+            return await Details(id, "Delete");
         }
 
         [HttpPost]
-        public IActionResult Delete(Department department)
+        public async Task<IActionResult> Delete(DepartmentViewModel departmentVM)
         {
             try
             {
-                _departmentRepo.Delete(department);
+                var mappedEmp = _mapper.Map<DepartmentViewModel, Department>(departmentVM);
+
+                _unitOfWork.Repository<Department>().Delete(mappedEmp);
+                await _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -134,7 +176,7 @@ namespace AppMVC.PL.Controllers
                 else
                     ModelState.AddModelError(string.Empty, "An Error Has Occurred during Updating the Department");
 
-                return View(department);
+                return View(departmentVM);
             }
         }
 
