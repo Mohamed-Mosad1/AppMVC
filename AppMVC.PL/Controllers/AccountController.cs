@@ -203,5 +203,10 @@ namespace AppMVC.PL.Controllers
 
         #endregion
 
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
     }
 }
