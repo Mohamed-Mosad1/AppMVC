@@ -1,15 +1,17 @@
-﻿@model DepartmentViewModel
+﻿@model RoleViewModel
+
 @{
-    ViewData["Title"] = "Delete Department";
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Delete Department</h1>
+<h1>Delete Role</h1>
 
 <form asp-action="Delete">
 
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <partial name="PartialViews/DetailsDeleteDepartmentPartial" />
+    <partial name="PartialViews/DetailsDeleteRolePartial" />
 
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">
@@ -27,7 +29,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    Are You Sure to Delete this Department
+                    Are You Sure to Delete this Role
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -37,7 +39,6 @@
         </div>
     </div>
 
-    <a asp-controller="Department" asp-action="Index" class="btn btn-light">Cancel</a>
+    <a asp-action="Index" class="btn btn-light">Cancel</a>
 
 </form>
-

@@ -125,10 +125,6 @@ namespace AppMVC.PL.Controllers
                 if(userFromDb is null)
                     return NotFound();
 
-                userFromDb.FName = userViewModel.FName;
-                userFromDb.LName = userViewModel.LName;
-                userFromDb.Email = userViewModel.UserEmail;
-
                 await _userManager.DeleteAsync(userFromDb);
 
                 return RedirectToAction(nameof(Index));
@@ -137,5 +133,6 @@ namespace AppMVC.PL.Controllers
             return View(userViewModel);
             
         }
+    
     }
 }
