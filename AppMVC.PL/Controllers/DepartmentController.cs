@@ -3,6 +3,7 @@ using AppMVC.BLL.Repositories;
 using AppMVC.DAL.Models;
 using AppMVC.PL.ViewModels;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
@@ -13,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace AppMVC.PL.Controllers
 {
+    [Authorize]
     // Inhertiance : DepartmentController is Controller
     // Composition : DepartmentController has a DepartmentRepository
     public class DepartmentController : Controller

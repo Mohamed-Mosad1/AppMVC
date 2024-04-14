@@ -1,21 +1,16 @@
-using AppMVC.BLL.Interfaces;
-using AppMVC.BLL.Repositories;
 using AppMVC.DAL.Data;
 using AppMVC.DAL.Models;
 using AppMVC.PL.Extensions;
 using AppMVC.PL.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace AppMVC.PL
 {
@@ -60,10 +55,12 @@ namespace AppMVC.PL
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
 
                 options.User.RequireUniqueEmail = true;
-            })
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            }).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
-            //services.AddAuthentication();
+            services.ConfigureApplicationCookie(config =>
+            {
+                config.LoginPath = "/Account/SignIn";
+            });
 
         }
 
@@ -85,6 +82,7 @@ namespace AppMVC.PL
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

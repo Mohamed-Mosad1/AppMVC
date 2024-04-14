@@ -30,6 +30,7 @@ namespace AppMVC.PL.ViewModels
         [Display(Name = "Is Active")]
         public bool IsActive { get; set; }
 
+        [Display(Name = "Email")]
         [EmailAddress]
         public string EmailAddress { get; set; }
 

@@ -12,7 +12,7 @@
 <div class="row justify-content-center align-items-center my-5">
     <form asp-action="Index" class="row col-8 offset-1">
         <div class="col-8">
-            <input type="text" class="form-control" id="searchInput" name="searchInput" placeholder="Search By Name"/>
+            <input type="text" class="form-control" id="searchInput" name="searchInput" placeholder="Search By Name" />
         </div>
         <div class="col-4">
             <input type="submit" class="btn btn-success" value="Search" />
@@ -22,49 +22,51 @@
 
 @if (Model.Count() > 0)
 {
-    <table class="table table-striped table-hover">
-        <thead>
-            <tr>
-                <th>Image</th>
-                <th>@Html.DisplayNameFor(E => E.Name)</th>
-                <th>@Html.DisplayNameFor(E => E.Age)</th>
-                <th>@Html.DisplayNameFor(E => E.Address)</th>
-                <th>@Html.DisplayNameFor(E => E.Department)</th>
-                <th>@Html.DisplayNameFor(E => E.Salary)</th>
-                <th>@Html.DisplayNameFor(E => E.IsActive)</th>
-                <th>@Html.DisplayNameFor(E => E.EmailAddress)</th>
-                <th>@Html.DisplayNameFor(E => E.Gender)</th>
-                <th>@Html.DisplayNameFor(E => E.PhoneNumber)</th>
-                <th>@Html.DisplayNameFor(E => E.HiringDate)</th>
-                <th>Details</th>
-                <th>Update</th>
-                <th>Delete</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var emp in Model)
-            {
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
                 <tr>
-                    <td class="align-middle">
-                        <img src="~/files/images/@emp.ImageName" class="img-fluid rounded-circle" alt="Employee Image" />
-                    </td>
-                    <td>@emp.Name</td>
-                    <td>@emp.Age</td>
-                    <td>@emp.Address</td>
-                    <td>@emp.Department?.Name</td>
-                    <td>@Html.DisplayFor(M => emp.Salary)</td>
-                    <td>@Html.DisplayFor(M => emp.IsActive)</td>
-                    <td>@Html.DisplayFor(M => emp.EmailAddress)</td>
-                    <td>@emp.Gender</td>
-                    <td>@emp.PhoneNumber</td>
-                    <td>@emp.HiringDate</td>
-
-                    <partial name="_ButtonPartilal" model="@emp.Id" />
-
+                    <th>Image</th>
+                    <th>@Html.DisplayNameFor(E => E.Name)</th>
+                    <th>@Html.DisplayNameFor(E => E.Age)</th>
+                    <th>@Html.DisplayNameFor(E => E.Address)</th>
+                    <th>@Html.DisplayNameFor(E => E.Department)</th>
+                    <th>@Html.DisplayNameFor(E => E.Salary)</th>
+                    <th>@Html.DisplayNameFor(E => E.IsActive)</th>
+                    <th>@Html.DisplayNameFor(E => E.EmailAddress)</th>
+                    <th>@Html.DisplayNameFor(E => E.Gender)</th>
+                    <th>@Html.DisplayNameFor(E => E.PhoneNumber)</th>
+                    <th>@Html.DisplayNameFor(E => E.HiringDate)</th>
+                    <th>Details</th>
+                    <th>Update</th>
+                    <th>Delete</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var emp in Model)
+                {
+                    <tr>
+                        <td class="align-middle">
+                            <img src="~/files/images/@emp.ImageName" class="img-fluid rounded-circle" alt="Employee Image" />
+                        </td>
+                        <td>@emp.Name</td>
+                        <td>@emp.Age</td>
+                        <td>@emp.Address</td>
+                        <td>@emp.Department?.Name</td>
+                        <td>@Html.DisplayFor(M => emp.Salary)</td>
+                        <td>@Html.DisplayFor(M => emp.IsActive)</td>
+                        <td>@Html.DisplayFor(M => emp.EmailAddress)</td>
+                        <td>@emp.Gender</td>
+                        <td>@emp.PhoneNumber</td>
+                        <td>@emp.HiringDate</td>
+
+                        <partial name="_ButtonPartilal" model="@emp.Id.ToString()" />
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
 else
 {
